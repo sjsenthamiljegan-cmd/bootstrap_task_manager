@@ -1,0 +1,498 @@
+<html>
+    </head>
+    <style>
+        body {
+    background-color: #f4f6f9;
+    font-family: Arial, sans-serif;
+}
+
+h1 {
+    font-weight: bold;
+}
+
+.card {
+    border-radius: 12px;
+}
+
+.card-header {
+    border-radius: 12px 12px 0 0 !important;
+}
+
+.text-danger {
+    font-size: 14px;
+    margin-top: 5px;
+}
+
+.task-card {
+    height: 100%;
+    transition: 0.3s;
+}
+
+.task-card:hover {
+    transform: translateY(-5px);
+}
+
+.status-badge {
+    font-size: 13px;
+}
+
+    </style>
+    <body>
+        <!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+    <title>Task Manager</title>
+
+    <!-- Bootstrap CSS -->
+    <link
+        href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css"
+        rel="stylesheet"
+    >
+
+    <link rel="stylesheet" href="style.css">
+</head>
+
+<body>
+
+<div class="container my-5">
+
+    <h1 class="text-center mb-4">Task Manager</h1>
+
+    <!-- ================= TASK FORM ================= -->
+
+    <div class="card shadow mb-5">
+
+        <div class="card-header bg-dark text-white">
+            <h3 class="mb-0">Task Form</h3>
+        </div>
+
+        <div class="card-body">
+
+            <form id="taskForm">
+
+                <!-- Name -->
+                <div class="mb-3">
+                    <label for="taskName" class="form-label">
+                        Name
+                    </label>
+
+                    <input
+                        type="text"
+                        class="form-control"
+                        id="taskName"
+                        placeholder="Enter task name"
+                    >
+
+                    <div id="nameError" class="text-danger"></div>
+                </div>
+
+
+                <!-- Description -->
+                <div class="mb-3">
+
+                    <label for="description" class="form-label">
+                        Description
+                    </label>
+
+                    <textarea
+                        class="form-control"
+                        id="description"
+                        rows="3"
+                        placeholder="Enter task description"
+                    ></textarea>
+
+                    <div id="descriptionError" class="text-danger"></div>
+
+                </div>
+
+
+                <!-- Assigned To -->
+                <div class="mb-3">
+
+                    <label for="assignedTo" class="form-label">
+                        Assigned To
+                    </label>
+
+                    <input
+                        type="text"
+                        class="form-control"
+                        id="assignedTo"
+                        placeholder="Enter assigned person"
+                    >
+
+                    <div id="assignedToError" class="text-danger"></div>
+
+                </div>
+
+
+                <!-- Due Date -->
+                <div class="mb-3">
+
+                    <label for="dueDate" class="form-label">
+                        Due Date
+                    </label>
+
+                    <input
+                        type="date"
+                        class="form-control"
+                        id="dueDate"
+                    >
+
+                    <div id="dueDateError" class="text-danger"></div>
+
+                </div>
+
+
+                <!-- Status -->
+                <div class="mb-3">
+
+                    <label for="status" class="form-label">
+                        Status
+                    </label>
+
+                    <select
+                        class="form-select"
+                        id="status"
+                    >
+                        <option value="">Select Status</option>
+                        <option value="TODO">TODO</option>
+                        <option value="IN PROGRESS">IN PROGRESS</option>
+                        <option value="REVIEW">REVIEW</option>
+                        <option value="DONE">DONE</option>
+                    </select>
+
+                    <div id="statusError" class="text-danger"></div>
+
+                </div>
+
+
+                <button
+                    type="submit"
+                    class="btn btn-primary"
+                >
+                    Add Task
+                </button>
+
+            </form>
+
+        </div>
+    </div>
+
+
+    <!-- ================= TASK LIST ================= -->
+
+    <div class="card shadow">
+
+        <div class="card-header bg-primary text-white">
+            <h3 class="mb-0">Task List</h3>
+        </div>
+
+        <div class="card-body">
+
+            <div
+                id="taskList"
+                class="row g-4"
+            ></div>
+
+        </div>
+
+    </div>
+
+</div>
+
+
+<!-- Bootstrap JS -->
+<script
+    src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js">
+</script>
+
+<!-- JavaScript -->
+<script src="script.js"></script>
+<script>
+    // ==========================================
+// SAMPLE TASK DATA
+// ==========================================
+
+let tasks = [
+
+    {
+        name: "Create Wireframe",
+        description: "Create the application wireframe.",
+        assignedTo: "Arun",
+        dueDate: "2026-10-10",
+        status: "TODO"
+    },
+
+    {
+        name: "Build Task Form",
+        description: "Create the task form using Bootstrap.",
+        assignedTo: "Priya",
+        dueDate: "2026-10-11",
+        status: "IN PROGRESS"
+    },
+
+    {
+        name: "Create Task Card",
+        description: "Create a Bootstrap card for each task.",
+        assignedTo: "Kavin",
+        dueDate: "2026-10-12",
+        status: "REVIEW"
+    },
+
+    {
+        name: "Add Validation",
+        description: "Validate all task form fields.",
+        assignedTo: "Meena",
+        dueDate: "2026-10-13",
+        status: "TODO"
+    },
+
+    {
+        name: "Test Application",
+        description: "Test all task manager functionality.",
+        assignedTo: "Rahul",
+        dueDate: "2026-10-14",
+        status: "DONE"
+    }
+
+];
+
+
+// ==========================================
+// GET HTML ELEMENTS
+// ==========================================
+
+const taskForm = document.getElementById("taskForm");
+
+const taskList = document.getElementById("taskList");
+
+const taskName = document.getElementById("taskName");
+
+const description = document.getElementById("description");
+
+const assignedTo = document.getElementById("assignedTo");
+
+const dueDate = document.getElementById("dueDate");
+
+const status = document.getElementById("status");
+
+
+// ==========================================
+// DISPLAY TASKS
+// ==========================================
+
+function displayTasks() {
+
+    taskList.innerHTML = "";
+
+    tasks.forEach(function(task) {
+
+        const taskCard = document.createElement("div");
+
+        taskCard.className = "col-md-6 col-lg-4";
+
+        taskCard.innerHTML = `
+
+            <div class="card task-card shadow-sm">
+
+                <div class="card-body">
+
+                    <h5 class="card-title">
+                        ${task.name}
+                    </h5>
+
+                    <p class="card-text">
+                        ${task.description}
+                    </p>
+
+                    <p>
+                        <strong>Assigned To:</strong>
+                        ${task.assignedTo}
+                    </p>
+
+                    <p>
+                        <strong>Due Date:</strong>
+                        ${task.dueDate}
+                    </p>
+
+                    <p>
+                        <strong>Status:</strong>
+
+                        <span class="badge bg-primary status-badge">
+                            ${task.status}
+                        </span>
+
+                    </p>
+
+                </div>
+
+            </div>
+
+        `;
+
+        taskList.appendChild(taskCard);
+
+    });
+
+}
+
+
+// ==========================================
+// CLEAR ERRORS
+// ==========================================
+
+function clearErrors() {
+
+    document.getElementById("nameError").textContent = "";
+
+    document.getElementById("descriptionError").textContent = "";
+
+    document.getElementById("assignedToError").textContent = "";
+
+    document.getElementById("dueDateError").textContent = "";
+
+    document.getElementById("statusError").textContent = "";
+
+}
+
+
+// ==========================================
+// VALIDATE FORM
+// ==========================================
+
+function validateForm() {
+
+    let isValid = true;
+
+    clearErrors();
+
+
+    // Name validation
+
+    if (taskName.value.trim() === "") {
+
+        document.getElementById("nameError").textContent =
+            "Task name is required.";
+
+        isValid = false;
+    }
+
+
+    // Description validation
+
+    if (description.value.trim() === "") {
+
+        document.getElementById("descriptionError").textContent =
+            "Description is required.";
+
+        isValid = false;
+    }
+
+
+    // Assigned To validation
+
+    if (assignedTo.value.trim() === "") {
+
+        document.getElementById("assignedToError").textContent =
+            "Assigned To field is required.";
+
+        isValid = false;
+    }
+
+
+    // Due Date validation
+
+    if (dueDate.value === "") {
+
+        document.getElementById("dueDateError").textContent =
+            "Due Date is required.";
+
+        isValid = false;
+    }
+
+
+    // Status validation
+
+    if (status.value === "") {
+
+        document.getElementById("statusError").textContent =
+            "Please select a status.";
+
+        isValid = false;
+    }
+
+
+    return isValid;
+}
+
+
+// ==========================================
+// FORM SUBMIT
+// ==========================================
+
+taskForm.addEventListener("submit", function(event) {
+
+    event.preventDefault();
+
+
+    // Validate
+
+    if (!validateForm()) {
+
+        return;
+    }
+
+
+    // Create new task
+
+    const newTask = {
+
+        name: taskName.value.trim(),
+
+        description: description.value.trim(),
+
+        assignedTo: assignedTo.value.trim(),
+
+        dueDate: dueDate.value,
+
+        status: status.value
+
+    };
+
+
+    // Add task to array
+
+    tasks.push(newTask);
+
+
+    // Display tasks
+
+    displayTasks();
+
+
+    // Clear form
+
+    taskForm.reset();
+
+    clearErrors();
+
+
+    alert("Task added successfully!");
+
+});
+
+
+// ==========================================
+// INITIAL DISPLAY
+// ==========================================
+
+displayTasks();
+</script>
+
+</body>
+</html>
+    </body>
+</html>
